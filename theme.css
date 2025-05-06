@@ -1,0 +1,10 @@
+/* @theme presentation-theme */
+
+@import 'default';
+
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+
+h1 { font-size: 5rem;}
