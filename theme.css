@@ -7,4 +7,9 @@ img[alt~="center"] {
   margin: 0 auto;
 }
 
-h1 { font-size: 5rem;}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}

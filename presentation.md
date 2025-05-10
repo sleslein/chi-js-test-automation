@@ -3,6 +3,7 @@ marp: true
 theme: presentation-theme
 backgroundColor: #fff
 html: true
+paginate: true
 ---
 
 # The Web Dev's Guide to Automated Testing
@@ -135,7 +136,7 @@ In hopes of meeting this purpose I've got 4 principles to share with you today
 
 -->
 
-# Purpose of Testing
+# Desired Outcome of Automated Testing
 
 _To have a high level of confidence that our software is working as expected._
 
@@ -152,7 +153,7 @@ We'll break these down as we move forward and include some common helpful practi
 
 1. Write tests that resemble how your software is used
 2. Well written tests are essential documentation
-3. Value Test Case Coverage over Code Coverage
+3. Code Coverage is a Leading Indicator of our Desired Outcome
 4. Optimize for fastest possible developer feedback loop.
 
 ---
@@ -166,6 +167,8 @@ Since most of us are web developers here, any of the details we'll look at as we
 ## Write tests that resemble how your software is used
 
 ---
+<!-- _header: Principle 1: Write Tests that resemble how your software is used -->
+
 
 <!--
 To be honest, This principle is nearly a copy and paste from a tweet from Kent C. Dodds on Twitter several years ago. I found this while I was reviewing the `testing-library` documentation.
@@ -176,13 +179,17 @@ This can often time lead to tests failing when you refactor your code, even if t
 
 Practically this means we should pay attention to how we're selecting and interact with elements.
 
-Watch out for
+This principle is in many ways philosophical. 
+However it should deeply inform HOW we write our tests
+
+Transition: Let me demonstrate in web developer terms...
 -->
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">The more your tests resemble the way your software is used, the more confidence they can give you.</p>&mdash; Kent C. Dodds ⚡ (@kentcdodds) <a href="https://twitter.com/kentcdodds/status/977018512689455106?ref_src=twsrc%5Etfw">March 23, 2018</a></blockquote>
 
 ---
 
+<!-- _header: Principle 1: Write Tests that resemble how your software is used -->
 <!--
 I've seen a lot of tests written like this, where element are queried for by their css class name.  Avoid this.  Users don't search for css classes in when they use our web applications.
 
@@ -192,9 +199,11 @@ Granted visual styles are certainly a part of the user experience.
 
 If you need to perform visual regression testing, they you'll want to use a visual snapshot testing tool.  I'm not gonna dig into that today, but do know they exist.  So if you really need to have visual tests that confirm your button sizes are regressing, there are tools for that!
 
+Transition: So testing with class name selectors.... not good.  Let's look at another practice to avoid...
 -->
 
 # Avoid class selectors
+
 
 ```tsx
 <Button submit class="primary">
@@ -215,18 +224,24 @@ describe('when user clicks the submit button') {
 
 ---
 
+<!-- _header: Principle 1: Write Tests that resemble how your software is used -->
+
 <!--
-In the same way, avoid html attributes when testing...because like css classes, users don't open up dev tools to look at html attributes
+So... we refactored our CSS at some point found that CSS class selectors lead to fragile tests.
+So we thought... let's add a data attribute!  Thats unique!  It doesn't need to change when we update our visual styles.
 
-And just like querying elements by class name, getting them by html attributes leads to brittle tests. Change the properties of that attribute, and all of your tests fail even if the system still functions and the user experience remains unchanged.
+However, from a practical stand point, we run into the same underlying problem.  When we test using a data attribute we are testing are really testing an implementation detail.  A spelling mistake, or refactoring change leads to failing tests. 
 
-It's not 2017 any more, and we shouldn't write tests like this any more.
+Philosophically, It's not accurately testing the user experience.
+Users don;t open their dev tools to find an element with an attribute
+
+Transition: It's not 2017 any more, and we shouldn't test our user experiences like this any more...
 -->
 
 # Avoid `data-test-*`
 
 ```tsx
-<Button submit data-test-id="submit-button>Sign Up!</Button>
+<Button submit data-test-id="submit-button">Sign Up!</Button>
 ```
 
 ```tsx
@@ -242,6 +257,7 @@ describe('when user clicks the submit button') {
 
 ---
 
+<!-- _header: Principle 1: Write Tests that resemble how your software is used -->
 <!--
 In 2018, testing-library was released.  Just use testing library!  Testing library is so good!  I'd go as far as to say, if you're not using testing library, then you're doing it wrong! It provides an amazing developer experience.
 
@@ -293,6 +309,7 @@ In some ways this principle is an extension of the first.  We need to embrace th
 ## Well written tests are essential documentation
 
 ---
+<!-- _header: Principle 2: Well written tests are essential documentation -->
 
 <!--
 Because I have reviewed that PR, code looks great... tests all pass.  Used the feature... yea... that's wrong.  Followed by that argument... sorry, conversation... with fellow developer...
@@ -309,6 +326,7 @@ But how do we do that?
 
 ---
 
+<!-- _header: Principle 2: Well written tests are essential documentation -->
 <!--
 Here are 5 questions that every effective test should cover.  I borrowed these from a guy name Eric Elliot.
 
@@ -325,6 +343,10 @@ Upon quick inspection these seem to make sense.  But I've seen tests that skip o
 5. How can the test be reproduced?
 
 ---
+
+<!-- _header: Principle 2: Well written tests are essential documentation -->
+<!--
+Here are 5 questions that every effective test should cover.  I borrowed these from a guy name Eric Elliot.
 
 <!--
 Here imagine we have a directory with multiple modules... each contains a validator function.
@@ -356,6 +378,7 @@ PASS  ./test.js
 
 ---
 
+<!-- _header: Principle 2: Well written tests are essential documentation -->
 <!--
 Here, we have another bad example... the output does not expect what should actually happen
 -->
@@ -381,76 +404,295 @@ PASS  ./test.js
 ```
 
 ---
+<!-- _header: Principle 2: Well written tests are essential documentation -->
 
+<!--
+Here's another bad example.... this is potentially the worst.  
+
+Who can spot the problem?
+
+Yes!  There are no actual assertions. We wrote the test and passes.  Great!  However it doesn't actually test ANYTHING!
+-->
 # Question 3 & 4: What is the actual and expected output
 
+```js
+describe('Mail Validator' => {
+  describe('given address without zip code', () => {
+    it('should be invalid', () => {
+        const isValid = mailValidator(P. Sherman, 42 Wallaby Way);
+    });
+  });
+});
+```
+```
+PASS  ./test.js
+  ✓ Mail Validator (X ms) 
+    ✓ given address without zip code (X ms) 
+        ✓ should be invalid (X ms) 
+```
+---
+
+<!-- _header: Principle 2: Well written tests are essential documentation -->
+<!--
+Here are 5 questions that every effective test should cover.  I borrowed these from a guy name Eric Elliot.
+No code example, didn't feel like another contrived example.  
+
+This is a case where the test code itself should clearly and concisely tests to reproduce the test case and the results.  
+
+To answer this question you have to actually read the test code and say, is this clear.
+
+Transition: So let's talk about some practical tangible things we can do to to answer these questions and have well written tests that function as essential documentation.
+-->
+
+# Question 5: How can the test be reproduced? 
 
 ---
-# Principle 2:
 
-## Naming Conventions
+<!-- _header: Principle 2: Well written tests are essential documentation -->
+
+<!--
+Ideally, we want our test output to read like a high quality report.  The test output itself is then clear documentation about what the functionality does.
+
+The bad example shows ambigous unclear results.  It doesn't really answer, what is being tested.  It doesn't state what it should do, nothing about the inputs or expected outputs
+
+Now the good example clearly shows which file is being tested an and which function.  It also defines what the inputs are as well as the expected output.
+
+Transition: A great way to get this kind out put is to follow good naming conventions
+
+-->
+
+# Start with the End in Mind
+
+```sh
+# Bad Output
+PASS  ./test.js
+  ✓ area code(X ms)  
+  ✓ no area code(X ms)  
+  ✓ not enough characters (X ms)  
+  ✓ valid address (X ms)  
+  ✓ no state(X ms)  
+  ✓ city state zip (X ms)  
+```
 
 ---
 
-# Principle 2
+<!-- _header: Principle 2: Well written tests are essential documentation -->
 
-## Consider the console output
+<!--
+Back when I was doing lots of testing in C# I stumbled across some very good naming conventions from Roy Osherove.
+
+I've since had success adapting his conventions to JS frameworks like Jest and Vite.  It looks like this: 
+-->
+
+# Naming Conventions
+```ts
+/**
+ * filename: [system-under-test].test.ts[x]
+ * test fixture: system under test or file being tested
+ * unit of work: often the function being tested
+ * state under test: input parameters
+ * expected result: actual output
+ */
+describe("test fixture", () => {
+  describe("unit of work", () => {
+    describe("state under test", () => {
+      it("expected result", () => {
+        // Test Code here
+      });
+    });
+  });
+});
+```
 
 ---
 
-# Principle 2:
+# Naming Conventions in Action
 
-## Arrange Act Assert pattern
+```ts
+/** phoneValidator.test.ts */
+describe('phoneValidator', () => {
+  describe('given 7 digit US number with no area code' => {
+    it('returns true', () => { /* test code */});
+  });
+
+  describe('given 7 digit US number with area code' => {
+    it('returns true', () => { /* test code */});
+  });
+
+  describe('given US number with less than 7 digits' => {
+    it('returns true', () => { /* test code */});
+  });
+});
+```
 
 ---
+
+# Better Output
+```sh
+# Good Output
+PASS ./phone-validator.test.js
+ ✓ Phone Validator (X ms) 
+  ✓ given 7 digit US number with no area code (X ms)  
+    ✓ returns true (X ms)  
+  ✓ given 7 digit US number with area code (X ms)  
+    ✓  returns true (X ms)  
+  ✓ given US number with less than 7 digits (X ms)  
+    ✓ returns false (X ms)  
+
+PASS ./address-validator.test.js
+ ✓ Address Validator (X ms) 
+  ✓ given full address, city, state, and zip (X ms)  
+    ✓ returns true (X ms)  
+  ✓ given full address and city, but no state(X ms)  
+    ✓ returns false (X ms)   
+```
+
+---
+
+<!-- _header: Principle 2: Well written tests are essential documentation -->
+
+<!--
+The AAA pattern is something I started using back in my C# days.
+A common pattern for consistently structuring tests.
+When done properly, it clearly articulates the intent of the test
+-->
+
+# Meet the Arrange, Act, Assert Pattern
+
+- **Arrange:** The requirements for the test.
+- **Act:** upon the unit of work or system under test
+- **Assert:** the expected output
+
+---
+
+<!--
+Here we have a contrived test example for a contrived sign up form.
+Note this test demonstrates Principle 1: Tests should reflect the user experience
+Using testing library.
+
+You'll see here that I've actually stubbed out comments for the 3 sections.  I strongly suggest you do the same.  These comments how intend is declared.  They help you think through you test and declare intent.  On  more than one occasion these comments have saved myself and the team.  After reading them test it lead to one of those converstaions... is this REALLY what the UX is ?  
+
+-->
+
+# Arrange, Act, Assert in Action
+
+```ts
+describe('Sign Up Form' => {
+  describe('when user inputs invalid phone number', () => {
+    it('should disable the sign up button', async () => {
+      // Arrange
+      /** other test setup steps  */
+      const phoneInput = screen.getByLabel('Phone Number');
+
+      // Act
+      await userEvent.change(phoneInput, 'Not a number');
+
+      // Assert
+      expect(await screen.findByRole('button', { name: 'Sign Up' })).toBeDisabled();
+    })
+  })
+});
+```
+---
+
+<!-- _header: Principle 2: Well written tests are essential documentation -->
+<!--
+Thus ends my commentary on principle 2: 
+
+When done right, tests aren't just a safety net.   They serve as documentation for what our code is supposed to do. 
+The console output serves as a good report of what the system does
+The test code itself highlights how the code is used.
+
+Transition: Let's move on to Principle 3
+-->
+
+## </ Principle2>
+
+---
+
+<!--
+Come back to desired outcome Point of automated tests are for us as engineers.
+
+Transition: If you have automated testing, but low confidence when you release...
+--->
 
 # Principle 3:
 
-## Value Test Case Coverage over Code Coverage
+## Code Coverage is a Leading Indicator of our Desired Outcome
+
+> _To have a high level of confidence that our software is working as expected._
 
 ---
 
+<!-- _header: Principle 3: Code Coverage is a leading Indicator for our desired outcome -->
+<!--
+You should... question things.  
+
+Transition: It might seem like I'm picking on code coverage.  And... well I sort of am.
+
+-->
+
+![h:525 center](img/bobs-code-cov.png)
+
+---
+<!-- 
+But only because often times we treat it like a vanity metric.  
+The metric can easily become the master, when its really just supposed to be a tool.
+-->
+![h:525 center](img/tom-code-cov.png)
+
+---
+<!--
+In reality, code coverage should just be a tool.  
+With a singular purpose, to reveal where you should not have high confidence your system is working as expected.
+
+It's job is to be a lense into area's of your code which are being tested manually. 
+
+Transition: And these are area's where you can improve your developer work flow, which ties closely principle 4
+-->
+
+# Code Coverage is a Tool
+
+![center](img/stapler.png)
+
+---
+<!--
+The desired goal of testing in general is to give us confidence that our software works.
+
+The goal of automated testing is to improve the developer workflow by increasing the feedback loop.
+Automation is a tool.
+
+Computers can test much more quickly than we can click buttons and execute business workflows.
+
+-->
 # Principle 4
 
 ## Optimize for fastest possible developer feedback loop
-
-- Automation!
-- Processing on CI
-- Fast runs locally
-- Necessary refactoring/changes to keep them as fast as possible
-- Sword fighting example.
 
 ---
 
 <!--
 Remember this old xkcd comic about compiling?
+Over the years I've found it applied to testing too!
 
-Yea it applied to testing too!
+Automated tests area tool. So if you feel you start stuck waiting on tests to run. 
+Invest in using the tool well
+
+Maybe that means running the tests locally before pushing them into a CI process.
+
+Maybe it means upgrading your tooling to newer more performant tools
+Maybe that means refactoring the tests so they run faster AND still give you the desired confidence your software is working.
+
+The point is, your automated tests are a tool.  Sharpen them as necessary to make sure you and your teams are as efficient and effective.
 -->
 
 ![h:575 center](xkcd-compiling.png)
 
 ---
-
 <!--
-- Each of these in very important
-- Help us ensure quality
-- Should be automated
-  - Locally
-  - CI jobs
-
-later we'll get into some specific practices and patterns to help with Unit and Integration testing.
+So, to put a bow on this...
 
 -->
-
-# Types of Testing
-
-_Testing Trophy, courtesy Kent C. Dodds_
-
-![bg right h:600](testing-trophy.webp)
-
----
-
 # Conclusion
 
 ## The Purpose of Testing
@@ -461,10 +703,20 @@ _To have a high level of confidence that our software is working as expected._
 
 1. Write tests that resemble how your software is used
 2. Well written tests are essential documentation
-3. Value Test Case Coverage over Code Coverage
+3. Use Code Coverage as a Leading Indicator
 4. Optimize for fastest possible developer feedback loop.
 
 ---
+
+<!--
+- Thank you for listening.  I hope you've found my pontifications on testing to be helpful.
+
+Thanks to Heather and Jess for making this time and space available.
+
+Thanks to the Issac this month, for Nieky, Ken, and all of you who've presented in the past.  I always come away with something useful.  
+
+** Pitch for next month. **
+-->
 
 # Thank you
 
@@ -473,3 +725,4 @@ _To have a high level of confidence that our software is working as expected._
 # Resources:
 
 - [What Every Unit Test Needs by Eric Elliot](https://medium.com/javascript-scene/what-every-unit-test-needs-f6cd34d9836d)
+- [Naming Standards for Unit Tests by Roy Osherove](https://osherove.com/blog/2005/4/3/naming-standards-for-unit-tests.html)
