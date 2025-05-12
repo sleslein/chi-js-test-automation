@@ -4,6 +4,7 @@ theme: presentation-theme
 backgroundColor: #fff
 html: true
 paginate: true
+baseUrl: ./slide-deck
 ---
 
 <!--
@@ -19,7 +20,7 @@ Thank Heather, and Jess, And Justin if he's there.
 <!--
 Education: I fully recognize that most of you care where I graduated from 20 years ago.  But I'm a proud Iowan! segways to experience
 Experience: I've been a full stack developer for 20 years
-Current Role: with Freewheel for almost 14 years.
+Current Role: with Freewheel for over 14 years.
 
 Today I'm here to talk about the timeless topic of testing. I say timeless partly because as I prepared for this presentation I realized some of the most impactful things I've learn about effective tests, date back to 2005! 
 
@@ -783,8 +784,12 @@ Still looking for August. Let me encourage you to help each of us get a little b
 -->
 
 # Questions?
-Slides:
-![h:200](img/gh-qr-code.png)
+
+<div class='flex'>
+
+  ![h:300](img/gh-qr-code.png)
+  ## _Slides_
+</div>
 
 ---
 
