@@ -18,8 +18,10 @@ Thank Heather, and Jess, And Justin if he's there.
 # About Me: Professional Stuff
 
 <!--
-Education: I fully recognize that most of you care where I graduated from 20 years ago.  But I'm a proud Iowan! segways to experience
-Experience: I've been a full stack developer for 20 years
+Education: I fully recognize that most of you care.  But I'm a proud Iowan! segways to experience
+
+Experience: I've experience doing full stack development
+
 Current Role: with Freewheel for over 14 years.
 
 Today I'm here to talk about the timeless topic of testing. I say timeless partly because as I prepared for this presentation I realized some of the most impactful things I've learn about effective tests, date back to 2005! 
@@ -29,7 +31,7 @@ And partly because the desire for quality software is timeless, and testing is a
 Transition:  However, I feel like the direction set for automated testing feels like this.
 -->
 
-- **Education:** 2004 Iowa State University Grad. w/ B.A. Info. Systems
+- **Education:** 2004 Iowa State University Grad. w/ B.S. Info. Systems
 - **Experience:** Over 20 Years as “Full-Stack” Developer
 - **Current Role:** Lead Software Engineer @ FreeWheel
 
@@ -37,10 +39,12 @@ Transition:  However, I feel like the direction set for automated testing feels 
 
 <!--
 Management/leadership come to a development team, put down a mandate... we need good quality software.  
+
 To make sure we get good quality software, we need to make sure that 80%, or 90% of your code is covered by unit tests!
 You've got 3 months to get there, go!
 
 Is this over simplistic characterization?  Yea, and maybe its not fair. But it seems to be what happens. 
+
 So, I'm gonna keep making bad office space memes to vent my frustration about code coverage 
 
 Transition: I find that code coverage can quickly lead us to Goodhart's Law
@@ -51,11 +55,9 @@ Transition: I find that code coverage can quickly lead us to Goodhart's Law
 ---
 
 <!--
-Where we "game-ify" or work the system to simply meet a measurable target.
+When a measure becomes the target, it ceases to be a good measure.
 
-Charles Goodhart was a british economist credited with this adage as it relates to monetary policy.  We may not be talking about money, but the sentiment applies to many areas of life and I think often times to automated testing as well.
-
-You see, when the metric becomes the expressed goal, it can lead to... undesirable results.
+That is to say, it can lead to... undesirable results.
 
 Transition: As an example focus on test coverage can lead to some thing like this...
 -->
@@ -73,9 +75,9 @@ Yes, that's exactly right!  It tells the tooling... hey don't check for coverage
 
 Now.  Does this really help us?
 
-Before anyone asks.... yes I have seen this happen in real life.  I have simplified the code block for clarity, and I did rename the packages to protect the identity of violators!
+Before anyone asks... yes I have seen this happen in real life.  I have simplified the code block for clarity, and I did rename the packages to protect the identity of violators!
 
-So my hope is to move us from a place of chasing metrics.  To a place where we take a purposeful and principled approach to automated testing.
+My hope is to move us from a place of chasing metrics.  To a place where we take a purposeful and principled approach to automated testing.
 
 Transition: So let's start with a good definition...
 -->
@@ -97,24 +99,17 @@ Transition: So let's start with a good definition...
 ---
 
 <!--
-I thinks our desired outcome is for automated testing is to ensure we have a high level of confidence that our software is working.
+I think our desired outcome is for automated testing is:
+
+> to ensure we have a high level of confidence that our software is working.
 
 Some may say this is obvious.  And I suppose it is.  But if based on my experience, its easy to loose sight of this.
 
-In the beginning our software may be very simple, and it may not need tests.  Some software never needs tests.
-    - A hobby project
-    - A very simple CLI tool that just one thing
-    - A small web form that isn't business critical
+In our day jobs we are often focus on the gnarly bits of our complicated, critical software.  We get distracted.
 
-But as our software grows. As it becomes more complicated, more valuable, more critical.
-Testing becomes more important... essential even.
-    - medical software that deals with life and well being
-    - handling of peoples money and their livelihoods
-    - Delivering critical communications (mail, email, phones, etc)
+I think having a shared strong definition as our desired outcome should be the filter through which we should be having those conversations with our teams.
 
-Most often in our day jobs we are building complicated, critical software.  So, I think this definition as our desired outcome should be the filter through which we should be having those conversations with our teams.
-
-Transition:  In hopes of meeting this purpose I've got 4 principles to share with you today...
+Transition:  I've got 4 principles to share with you.  That I've found if followed help meet our desire for confidence when we ship our software...
 
 -->
 
@@ -146,6 +141,7 @@ Transition: We'll break these down as we move forward and include some common he
 
 <!--
 Since most of us are web developers here, many of the details we'll look at as we move forward, will be focus on the web.  
+
 But principle still holds true even if you're writing other forms of software.
 
 Transition: To be honest, This principle is nearly a copy and paste from a tweet from Kent C. Dodds on Twitter several years ago. I found this while I was reviewing the `testing-library` documentation.
@@ -158,17 +154,20 @@ Transition: To be honest, This principle is nearly a copy and paste from a tweet
 ---
 <!-- _header: Principle 1: Write Tests that resemble how your software is used -->
 
-
 <!--
 
-The idea really resonates with me.  As a person who works on the web, what my team and I are testing is the USER EXPERIENCE, not the code itself.  For most cases, I don't want to test implementation details.  Testing implementation details can lead to testing things that don't matter to your users.
+The idea really resonates with me.  As a person who works on the web, what my team and I are testing is the USER EXPERIENCE, not the code itself.  
 
-This can often time lead to tests failing when you refactor your code, even if the user's experience doesn't change.
+For most cases, we don't want to test implementation details only leads to two outcomes:
 
-Practically this means we should pay attention to how we're selecting and interact with elements.
+1. testing things that don't matter to your users.
+
+2. Fragile tests 
 
 This principle is in many ways philosophical. 
-However it should deeply inform HOW we write our tests
+However it should deeply inform HOW we write our tests.
+
+Practically this means we should pay attention to how we're selecting and interact with elements.
 
 Transition: Let me demonstrate in web developer terms...
 -->
@@ -180,14 +179,24 @@ Transition: Let me demonstrate in web developer terms...
 <!-- _header: Principle 1: Write Tests that resemble how your software is used -->
 <!--
 Over the years, I've seen a lot of tests written like this.
-Element are queried for by their css class name.  Avoid this.  Users don't search for css classes in when they use our web applications.
+
+Element are queried for by their css class name.  
+
+Avoid this.  Users don't search for css classes in when they use our web applications.
 
 Tests written this way can be fragile.
-  -  Imagine you need to need to refactor your code, maybe your team decides to switch to Tailwind.  Maybe you mis-spelled the class name.  Maybe you decided to give it a better name.  Once you change that class name.  All your tests fail.  The system still works as it should. The user experience didn't change.  But all of your tests fail.  Now you have a bunch of extra work to do.
+- New framework, Tailwind 
+- Maybe you mis-spelled the class name.  
+- Maybe you decided to give it a better name.  
 
-Granted visual styles are certainly a part of the user experience.
+Once you change that class name.  All your tests fail.  
 
-If you need to perform visual regression testing, use a visual snapshot testing tool.  I'm not gonna dig into that today, but do know they exist.  So if you really need to have visual tests that confirm your button sizes are regressing, there are tools for that!
+The system still works as it should. The user experience didn't change.  But all of your tests fail.  Now you have a bunch of extra work to do.
+
+[Comments about visual testing]
+- Necessary, but use visual snap shot testing
+
+At the end of the day, css class names themselves are implementation details.
 
 Transition: So testing with class name selectors.... not good.  Let's look at another practice to avoid...
 -->
@@ -217,6 +226,7 @@ describe('when user clicks the submit button') {
 
 <!--
 So... we refactored our CSS at some point found that CSS class selectors lead to fragile tests.
+
 So we thought... let's use a data attribute instead!  It's unique and doesn't need to change when we update our visual styles.
 
 However, from a practical stand point, we run into the same underlying problem.  When we test using a data attribute we are testing are really testing an implementation detail.  A spelling mistake, or refactoring change leads to failing tests. 
@@ -439,7 +449,9 @@ PASS  ./test.js
 <!--
 This is a case where the test code itself should clearly and concisely tests to reproduce the test case and the results.  
 
-To answer this question you have to actually read the test code and say, is this clear.  If you cannot easily identity the answer to this question, start asking more questions
+To answer this question you have to actually read the test code and say, is this clear. 
+
+If you cannot easily identity the answer to this question, start asking more questions
 
 Now, some of you are nodding.  Some of you are cringing.  Many of us, myself included have made these mistakes.  It's OK. 
 
@@ -630,7 +642,9 @@ describe('Sign Up Form' => {
 <!--
 
 When done right, tests aren't just a safety net. The test code and output serve as documentation for what our code is supposed to do. 
+
 The console output serves as a good report of what the system does
+
 The test code itself highlights how the code is used.
 
 Transition: Let's move on to Principle 3
@@ -697,10 +711,14 @@ Transition: It's job is to be a lense into area's of your code and how it's bein
 
 <!-- _header: Principle 3: Code Coverage is a leading Indicator for our desired outcome -->
 <!--
-Here's a totally fictitious example of a coverage report.  As you daily drive your code, write tests, etc.
+Here's a totally fictitious example of a coverage report.  
+
+As you daily drive your code, write tests, etc.
 Drill in, notice that there is a code branch which isn't covered in module 1.  Let me have a look at that!  
 
-Maybe your making changes to some components, drill into the report, see whats happening.  Maybe you can add some missing test cases for the one your working on so you can increase confidence that you're software is working.
+Maybe your making changes to some components, drill into the report, see whats happening. 
+
+Maybe you can add some missing test cases for the one your working on so you can increase confidence that you're software is working.
 
 Remember, its a tool to help you, to improve your developer workflow.
 
