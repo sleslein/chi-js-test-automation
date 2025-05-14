@@ -122,8 +122,11 @@ _To have a high level of confidence that our software is working as expected._
 <!--
 The principles are as follows.
 1. Write tests that resemble how your software is used
+
 2. Well written tests are essential documentation
+
 3. Code Coverage is a Leading Indicator of our Desired Outcome
+
 4. Optimize for fastest possible developer feedback loop.
 
 Transition: We'll break these down as we move forward and include some common helpful practices
@@ -780,7 +783,7 @@ _To have a high level of confidence that our software is working as expected._
 
 1. Write tests that resemble how your software is used
 2. Well written tests are essential documentation
-3. Use Code Coverage as a Leading Indicator
+3. Use Code Coverage as a Leading Indicator of our Desired Outcome
 4. Optimize for fastest possible developer feedback loop.
 
 ---
